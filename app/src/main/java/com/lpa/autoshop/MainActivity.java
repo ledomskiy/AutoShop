@@ -1,5 +1,6 @@
 package com.lpa.autoshop;
 
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -7,7 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.lpa.autoshop.entity.ProductType;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -22,25 +26,36 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
     //private static final String SHOP_URL = "http://100.112.39.188:8080/AutoShop/webresources/testpackage.test";
-    private static final String SHOP_URL = "http://100.112.39.188:8080/AutoShop/webresources/entity.product";
+    private static final String SHOP_URL = "http://100.112.39.188:8080/AutoShop/webresources/entity.producttype";
 
-    private TextView tv;
+    private ArrayList<ProductType> productTypes;
+    private ArrayAdapter<ProductType> productTypesArrayAdapter;
+
 
     private Handler handler;
-    public void updateText (String text){
-        tv.setText(text);
+    public void addProductType (ProductType productType){
+        productTypes.add(productType);
+        productTypesArrayAdapter.notifyDataSetChanged();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FragmentManager fm = getFragmentManager();
+        ProductTypeListFragment productTypeListFragment = (ProductTypeListFragment)fm.findFragmentById(R.id.product_type_list_fragment);
+        productTypes = new ArrayList<ProductType>();
+        productTypesArrayAdapter = new ArrayAdapter<ProductType>(this, android.R.layout.simple_list_item_1, productTypes);
+        productTypeListFragment.setListAdapter(productTypesArrayAdapter);
+
+
         handler = new Handler ();
-        tv = (TextView)findViewById (R.id.hello_world);
 
         Thread networkThread = new Thread() {
             @Override
@@ -55,38 +70,33 @@ public class MainActivity extends ActionBarActivity {
                     if (responseCode == HttpURLConnection.HTTP_OK){
                         InputStream inputStream = httpConnection.getInputStream();
 
-                        /*
                         XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
                         parserFactory.setNamespaceAware(true);
                         XmlPullParser parser = parserFactory.newPullParser();
                         parser.setInput(inputStream, null);
 
                         while (parser.getEventType() != XmlPullParser.END_DOCUMENT){
-                            switch (parser.getEventType()){
-                                case XmlPullParser.TEXT:
-                                    Log.v("ParseXML", "Text = " + parser.getText()  );
-                                    break;
-                                default :
-                                    break;
+                            if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("alias")){
+                                // Переходим к значению алиаса
+                                parser.next ();
+                                final String alias = parser.getText();
+                                // Переходим к значению name
+                                parser.next();
+                                parser.next();
+                                parser.next();
+                                final String name = parser.getText();
+
+                                handler.post(new Runnable (){
+                                    public void run(){
+                                        addProductType(new ProductType(alias, name));
+                                    }
+                                });
+
+                                Log.v ("MainActivity", "alias = " + alias + " name = " + name);
+
                             }
                             parser.next();
                         }
-                        */
-
-                        byte[] resultArray = new byte[inputStream.available()];
-                        inputStream.read(resultArray);
-                        final String resultString = new String (resultArray);
-
-
-                        handler.post(
-                            new Runnable (){
-                                public void run(){
-                                    updateText(resultString);
-                                }
-                            }
-                        );
-                        Log.v("MainActivity", resultString);
-
 
                         Log.v("MainActivity","HTTP_SUCCESS");
                     }else{
