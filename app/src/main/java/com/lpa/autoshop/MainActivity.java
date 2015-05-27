@@ -18,6 +18,9 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -27,6 +30,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -38,10 +44,6 @@ public class MainActivity extends ActionBarActivity {
 
 
     private Handler handler;
-    public void addProductType (ProductType productType){
-        productTypes.add(productType);
-        productTypesArrayAdapter.notifyDataSetChanged();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,14 @@ public class MainActivity extends ActionBarActivity {
         productTypeListFragment.setListAdapter(productTypesArrayAdapter);
 
 
+
         handler = new Handler ();
 
+        refreshProductTypeList();
+
+    }
+
+    private void refreshProductTypeList() {
         Thread networkThread = new Thread() {
             @Override
             public void run() {
@@ -70,34 +78,29 @@ public class MainActivity extends ActionBarActivity {
                     if (responseCode == HttpURLConnection.HTTP_OK){
                         InputStream inputStream = httpConnection.getInputStream();
 
-                        XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
-                        parserFactory.setNamespaceAware(true);
-                        XmlPullParser parser = parserFactory.newPullParser();
-                        parser.setInput(inputStream, null);
+                        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder db = dbf.newDocumentBuilder();
 
-                        while (parser.getEventType() != XmlPullParser.END_DOCUMENT){
-                            if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("alias")){
-                                // Переходим к значению алиаса
-                                parser.next ();
-                                final String alias = parser.getText();
-                                // Переходим к значению name
-                                parser.next();
-                                parser.next();
-                                parser.next();
-                                final String name = parser.getText();
-
-                                handler.post(new Runnable (){
-                                    public void run(){
-                                        addProductType(new ProductType(alias, name));
+                        Document dom = db.parse(inputStream);
+                        Element productTypesElement = dom.getDocumentElement();
+                        NodeList nodeList = productTypesElement.getElementsByTagName("productType");
+                        if (nodeList != null && nodeList.getLength() > 0){
+                            for (int i = 0; i < nodeList.getLength(); i++){
+                                Element productTypeElement = (Element)nodeList.item(i);
+                                Element aliasElement = (Element)productTypeElement.getElementsByTagName("alias").item(0);
+                                Element nameElement = (Element)productTypeElement.getElementsByTagName("name").item(0);
+                                final String alias = aliasElement.getFirstChild().getNodeValue();
+                                final String name = nameElement.getFirstChild().getNodeValue();
+                                Log.v("MainActivity", "alias = " + alias + " name = " + name);
+                                handler.post (
+                                    new Runnable(){
+                                        public void run(){
+                                            addProductType(new ProductType(alias, name));
+                                        }
                                     }
-                                });
-
-                                Log.v ("MainActivity", "alias = " + alias + " name = " + name);
-
+                                );
                             }
-                            parser.next();
                         }
-
                         Log.v("MainActivity","HTTP_SUCCESS");
                     }else{
                         Log.v("MainActivity","HTTP_ERROR");
@@ -110,9 +113,12 @@ public class MainActivity extends ActionBarActivity {
             }
         };
         networkThread.start();
-
     }
 
+    public void addProductType (ProductType productType){
+        productTypes.add(productType);
+        productTypesArrayAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
