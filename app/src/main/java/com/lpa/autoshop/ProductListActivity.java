@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.lpa.autoshop.entity.Product;
+import com.lpa.autoshop.entity.ProductRegistry;
+import com.lpa.autoshop.entity.ProductTypeRegistry;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -26,7 +28,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 
 public class ProductListActivity extends ActionBarActivity {
-    public static final String PRODUCT_BY_TYPE_URL = "http://100.112.39.188:8080/AutoShop/webresources/entity.product/type/";
     private String productTypeAlias;
 
     private ArrayList<Product> productArrayList;
@@ -39,10 +40,10 @@ public class ProductListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
 
-        Log.v("ProductListActivity", getIntent().getStringExtra(ProductTypeListFragment.PRODUCT_TYPE_ALIAS));
-        productTypeAlias = getIntent().getStringExtra(ProductTypeListFragment.PRODUCT_TYPE_ALIAS);
+        Log.v("ProductListActivity", getIntent().getStringExtra(ProductTypeRegistry.PRODUCT_TYPE_ALIAS));
         productArrayList = new ArrayList<>();
         productArrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_1, productArrayList);
+        productTypeAlias = getIntent().getStringExtra(ProductTypeRegistry.PRODUCT_TYPE_ALIAS);
 
         FragmentManager fragmentManager = getFragmentManager();
         ProductListFragment productListFragment = (ProductListFragment)fragmentManager.findFragmentById(R.id.product_list_fragment);
@@ -52,76 +53,27 @@ public class ProductListActivity extends ActionBarActivity {
         refreshProductList();
     }
 
-    private void refreshProductList(){
-        Thread networkThread = new Thread (){
+
+    public void refreshProductList(){
+        final String typeAlias = productTypeAlias;
+        Thread thread = new Thread(){
             @Override
             public void run(){
-                try {
-                    URL url = new URL(PRODUCT_BY_TYPE_URL+productTypeAlias);
-                    HttpURLConnection httpConnection = (HttpURLConnection)url.openConnection();
-                    int responseCode = httpConnection.getResponseCode();
-
-                    if (responseCode == HttpURLConnection.HTTP_OK){
-                        InputStream inputStream = httpConnection.getInputStream();
-                        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                        DocumentBuilder db = dbf.newDocumentBuilder();
-                        Document document = db.parse(inputStream);
-
-                        Element parentElement = document.getDocumentElement();
-                        NodeList nodeList = parentElement.getElementsByTagName("product");
-                        if (nodeList != null && nodeList.getLength() > 0){
-                            for (int i = 0; i < nodeList.getLength(); i++){
-                                Element productElement = (Element)nodeList.item(i);
-                                Element idProductElement = (Element)productElement.getElementsByTagName("idProduct").item(0);
-                                Element nameElement = (Element)productElement.getElementsByTagName("name").item(0);
-                                Element productTypeAliasElement = (Element)productElement.getElementsByTagName("productTypeAlias").item(0);
-                                Element descriptionElement = (Element)productElement.getElementsByTagName("description").item(0);
-                                Element priceElement = (Element)productElement.getElementsByTagName("price").item(0);
-
-                                final int idProduct = Integer.parseInt(idProductElement.getFirstChild().getNodeValue());
-                                final String name = nameElement.getFirstChild().getNodeValue();
-                                final String productType = productTypeAliasElement.getFirstChild().getNodeValue();
-                                final String description = descriptionElement.getFirstChild().getNodeValue();
-                                final double price = Double.parseDouble(priceElement.getFirstChild().getNodeValue());
-
-                                Log.v ("ProductListActivity", idProduct + " " + name + " " + productType + " " + description + " " + price);
-
-                                handler.post(
-                                    new Runnable(){
-                                        public void run(){
-                                            addProduct(new Product(idProduct, name, productType, price, description));
-                                        }
-                                    }
-                                );
-                                /*
-                                <product>
-                                   <description>Мегакрутой движок для крузака:)</description>
-                                   <idProduct>1</idProduct>
-                                   <name>Двигатель для тойоты</name>
-                                   <price>100000.0</price>
-                                   <productTypeAlias>Engine</productTypeAlias>
-                               </product>
-                                 */
+                final ArrayList<Product> products = ProductRegistry.getInstance().findByType(typeAlias);
+                handler.post(
+                    new Runnable(){
+                        public void run(){
+                            productArrayList.clear();
+                            for (Product product : products){
+                                productArrayList.add(product);
                             }
+                            productArrayAdapter.notifyDataSetChanged();
                         }
-
-
-                        Log.v ("HttpUrlConnection", "HTTP_SUCCESS");
-                    }else{
-                        Log.v ("HttpUrlConnection", "HTTP_ERROR");
                     }
-                } catch (Exception e){
-                    Log.v ("Exception", "EXCEPTION!!! " + e.getMessage());
-                }
-
+                );
             }
         };
-        networkThread.start();
-    }
-
-    private void addProduct (Product product){
-        productArrayList.add(product);
-        productArrayAdapter.notifyDataSetChanged();
+        thread.start();
     }
 
 
