@@ -8,7 +8,9 @@
         android:id="@+id/product_name_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/product_name_label"/>
+        android:text="@string/product_name_label"
+        android:textSize="@dimen/header_text_size"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/product_name"
@@ -19,7 +21,9 @@
         android:id="@+id/product_description_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/product_description_label"/>
+        android:text="@string/product_description_label"
+        android:textSize="@dimen/header_text_size"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/product_description"
@@ -30,7 +34,9 @@
         android:id="@+id/product_price_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/product_price_label"/>
+        android:text="@string/product_price_label"
+        android:textSize="@dimen/header_text_size"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/product_price"

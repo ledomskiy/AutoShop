@@ -14,7 +14,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/warehouse_availability"/>
+        android:text="@string/warehouse_availability"
+        android:textSize="@dimen/header_text_size"
+        android:textStyle="bold"/>
     <fragment
         android:name="com.lpa.autoshop.WarehouseListFragment"
         android:id="@+id/warehouse_list_fragment"
