@@ -11,5 +11,15 @@
         android:layout_height="wrap_content"
     />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/warehouse_availability"/>
+    <fragment
+        android:name="com.lpa.autoshop.WarehouseListFragment"
+        android:id="@+id/warehouse_list_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 
 </LinearLayout>

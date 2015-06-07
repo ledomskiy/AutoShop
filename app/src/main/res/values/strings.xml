@@ -8,4 +8,6 @@
     <string name="product_name_label">Название:</string>
     <string name="product_description_label">Описание:</string>
     <string name="product_price_label">Цена:</string>
+
+    <string name="warehouse_availability">Доступно в магазинах:</string>
 </resources>
