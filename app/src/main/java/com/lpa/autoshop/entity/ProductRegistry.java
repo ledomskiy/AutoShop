@@ -61,6 +61,15 @@ public class ProductRegistry {
         return result;
     }
 
+    public boolean containWithType (ArrayList<Product> productList, String productTypeAlias){
+        for (Product product : productList){
+            if (product.getProductTypeAlias().equals(productTypeAlias)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void refreshProductList(){
         try {
