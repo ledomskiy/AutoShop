@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lpa.autoshop.WarehouseListActivity">
+
+    <fragment
+        android:name="com.lpa.autoshop.WarehouseListFragment"
+        android:id="@+id/warehouse_list_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+</LinearLayout>

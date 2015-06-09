@@ -10,4 +10,5 @@
     <string name="product_price_label">Цена:</string>
 
     <string name="warehouse_availability">Доступно в магазинах:</string>
+    <string name="title_activity_warehouse_list">WarehouseListActivity</string>
 </resources>

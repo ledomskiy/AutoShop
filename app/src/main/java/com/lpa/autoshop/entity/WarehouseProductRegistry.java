@@ -27,6 +27,14 @@ public class WarehouseProductRegistry {
         refreshWarehouseProductList();
     }
 
+    public WarehouseProduct find (int idProduct, int idWarehouse){
+        for (WarehouseProduct warehouseProduct : warehouseProducts){
+            if (warehouseProduct.getIdProduct() == idProduct && warehouseProduct.getIdWarehouse() == idWarehouse){
+                return warehouseProduct;
+            }
+        }
+        return null;
+    }
 
     public ArrayList<Warehouse> findByProduct(int idProduct){
         refreshWarehouseProductList();

@@ -17,11 +17,18 @@
         android:text="@string/warehouse_availability"
         android:textSize="@dimen/header_text_size"
         android:textStyle="bold"/>
-    <fragment
-        android:name="com.lpa.autoshop.WarehouseListFragment"
-        android:id="@+id/warehouse_list_fragment"
+
+    <Button
+        android:id="@+id/find_in_warehouse"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Найти в магазинах"
+    />
+    <Button
+        android:id="@+id/show_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Отзывы"/>
 
 
 </LinearLayout>

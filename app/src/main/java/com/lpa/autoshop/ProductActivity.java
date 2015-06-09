@@ -1,12 +1,15 @@
 package com.lpa.autoshop;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import com.lpa.autoshop.entity.ProductRegistry;
 import com.lpa.autoshop.entity.Warehouse;
@@ -17,46 +20,30 @@ import java.util.ArrayList;
 
 
 public class ProductActivity extends ActionBarActivity {
-    private ArrayList<Warehouse> warehouseArrayList;
-    private ArrayAdapter<Warehouse> warehouseArrayAdapter;
-    private Handler handler;
+    private int idProduct;
+    private Button findInWarehouses;
+    private Button showReview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        warehouseArrayList = new ArrayList<>();
-        warehouseArrayAdapter = new ArrayAdapter<Warehouse>(this, android.R.layout.simple_list_item_1, warehouseArrayList);
+        idProduct = getIntent().getIntExtra(ProductRegistry.ID_PRODUCT, -1);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        WarehouseListFragment warehouseListFragment = (WarehouseListFragment)fragmentManager.findFragmentById(R.id.warehouse_list_fragment);
-        warehouseListFragment.setListAdapter(warehouseArrayAdapter);
+        findInWarehouses = (Button)findViewById(R.id.find_in_warehouse);
+        findInWarehouses.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent (ProductActivity.this, WarehouseListActivity.class);
+                        intent.putExtra(ProductRegistry.ID_PRODUCT, idProduct);
+                        startActivity(intent);
+                    }
+                }
+        );
 
-        handler = new Handler();
-        refreshWarehouseList();
-    }
-
-    public void refreshWarehouseList(){
-        final int idProduct = getIntent().getIntExtra(ProductRegistry.ID_PRODUCT, 0);
-        Thread thread = new Thread(){
-            @Override
-            public void run(){
-                final ArrayList<Warehouse> warehouses = WarehouseProductRegistry.getInstance().findByProduct(idProduct);
-                handler.post(
-                        new Runnable() {
-                            public void run() {
-                                warehouseArrayList.clear();
-                                for (Warehouse warehouse : warehouses) {
-                                    warehouseArrayList.add(warehouse);
-                                }
-                                warehouseArrayAdapter.notifyDataSetChanged();
-                            }
-                        }
-                );
-            }
-        };
-        thread.start();
+        showReview = (Button)findViewById(R.id.show_review);
     }
 
 

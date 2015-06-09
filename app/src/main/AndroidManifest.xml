@@ -26,6 +26,10 @@
             android:name=".ProductActivity"
             android:label="@string/title_activity_product" >
         </activity>
+        <activity
+            android:name=".WarehouseListActivity"
+            android:label="@string/title_activity_warehouse_list" >
+        </activity>
     </application>
 
 </manifest>
