@@ -11,5 +11,7 @@
 
     <string name="warehouse_availability">Доступно в магазинах:</string>
     <string name="title_activity_warehouse_list">WarehouseListActivity</string>
+    <string name="title_activity_review_list">ReviewListActivity</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_review_add">ReviewAddActivity</string>
 </resources>

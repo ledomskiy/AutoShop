@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-library android:name="com.google.android.maps" />
+    <uses-library android:name="com.google.android.gms.maps" />
 
     <application
         android:allowBackup="true"
@@ -35,6 +35,22 @@
         <activity
             android:name=".WarehouseMapActivity"
             android:label="@string/title_activity_map" >
+        </activity>
+        <activity
+            android:name=".ReviewListActivity"
+            android:label="@string/title_activity_review_list" >
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDbWKN2ezOZvH7VdoCGnPWTIG7W0sP1vtk" />
+
+        <activity
+            android:name=".ReviewAddActivity"
+            android:label="@string/title_activity_review_add" >
         </activity>
     </application>
 

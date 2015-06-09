@@ -44,6 +44,16 @@ public class ProductActivity extends ActionBarActivity {
         );
 
         showReview = (Button)findViewById(R.id.show_review);
+        showReview.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent (ProductActivity.this, ReviewListActivity.class);
+                        intent.putExtra(ProductRegistry.ID_PRODUCT, idProduct);
+                        startActivity(intent);
+                    }
+                }
+        );
     }
 
 
