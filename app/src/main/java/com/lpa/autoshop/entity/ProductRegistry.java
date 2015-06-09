@@ -95,16 +95,18 @@ public class ProductRegistry {
                         Element productTypeAliasElement = (Element)productElement.getElementsByTagName("productTypeAlias").item(0);
                         Element descriptionElement = (Element)productElement.getElementsByTagName("description").item(0);
                         Element priceElement = (Element)productElement.getElementsByTagName("price").item(0);
+                        Element ratingElement = (Element)productElement.getElementsByTagName("rating").item(0);
 
                         final int idProduct = Integer.parseInt(idProductElement.getFirstChild().getNodeValue());
                         final String name = nameElement.getFirstChild().getNodeValue();
                         final String productType = productTypeAliasElement.getFirstChild().getNodeValue();
                         final String description = descriptionElement.getFirstChild().getNodeValue();
                         final double price = Double.parseDouble(priceElement.getFirstChild().getNodeValue());
+                        final float rating = Float.parseFloat(ratingElement.getFirstChild().getNodeValue());
 
-                        Log.v("ProductRegistry", idProduct + " " + name + " " + productType + " " + description + " " + price);
+                        Log.v("ProductRegistry", idProduct + " " + name + " " + productType + " " + description + " " + price + " " + rating);
 
-                        addProduct(new Product(idProduct, name, productType, price, description));
+                        addProduct(new Product(idProduct, name, productType, price, description, rating));
                     }
                 }
                 Log.v ("ProductRegistry", "HTTP_SUCCESS");

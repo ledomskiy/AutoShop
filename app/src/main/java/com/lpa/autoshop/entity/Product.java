@@ -16,13 +16,15 @@ public class Product {
     private String productTypeAlias;
     private double price;
     private String description;
+    private float rating;
 
-    public Product(int idProduct, String name, String productTypeAlias, double price, String description) {
+    public Product(int idProduct, String name, String productTypeAlias, double price, String description, float rating) {
         this.idProduct = idProduct;
         this.name = name;
         this.productTypeAlias = productTypeAlias;
         this.price = price;
         this.description = description;
+        this.rating = rating;
     }
 
     public int getIdProduct() {
@@ -63,6 +65,10 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public float getRating() {
+        return rating;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class ProductListActivity extends ActionBarActivity {
     private String productTypeAlias;
 
     private ArrayList<Product> productArrayList;
-    private ArrayAdapter<Product> productArrayAdapter;
+    private ProductItemAdapter productArrayAdapter;
 
     private Handler handler;
 
@@ -42,7 +42,7 @@ public class ProductListActivity extends ActionBarActivity {
 
         Log.v("ProductListActivity", getIntent().getStringExtra(ProductTypeRegistry.PRODUCT_TYPE_ALIAS));
         productArrayList = new ArrayList<>();
-        productArrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_1, productArrayList);
+        productArrayAdapter = new ProductItemAdapter(this, R.layout.product_item, productArrayList);
         productTypeAlias = getIntent().getStringExtra(ProductTypeRegistry.PRODUCT_TYPE_ALIAS);
 
         FragmentManager fragmentManager = getFragmentManager();
