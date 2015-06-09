@@ -1,12 +1,14 @@
 package com.lpa.autoshop;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.Button;
 
 import com.lpa.autoshop.entity.ProductRegistry;
 import com.lpa.autoshop.entity.Warehouse;
@@ -21,6 +23,8 @@ public class WarehouseListActivity extends ActionBarActivity {
     private ArrayList<WarehouseProductDescription> warehouseArrayList;
     private WarehouseProductItemAdapter warehouseArrayAdapter;
     private Handler handler;
+
+    private Button showOnMapButton;
 
 
     @Override
@@ -39,6 +43,15 @@ public class WarehouseListActivity extends ActionBarActivity {
 
         handler = new Handler();
         refreshWarehouseList();
+
+        showOnMapButton = (Button)findViewById(R.id.show_on_map);
+        showOnMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WarehouseListActivity.this, WarehouseMapActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void refreshWarehouseList(){

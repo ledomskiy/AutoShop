@@ -11,13 +11,6 @@
         android:layout_height="wrap_content"
     />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/warehouse_availability"
-        android:textSize="@dimen/header_text_size"
-        android:textStyle="bold"/>
-
     <Button
         android:id="@+id/find_in_warehouse"
         android:layout_width="match_parent"

@@ -11,4 +11,5 @@
 
     <string name="warehouse_availability">Доступно в магазинах:</string>
     <string name="title_activity_warehouse_list">WarehouseListActivity</string>
+    <string name="title_activity_map">MapActivity</string>
 </resources>

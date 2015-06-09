@@ -19,7 +19,6 @@ import com.lpa.autoshop.entity.ProductRegistry;
 public class ProductFragment extends Fragment{
     private TextView productNameTextView;
     private TextView productDescriptionTextView;
-    private TextView productPriceTextView;
     private int idProduct;
     private Product product;
     Handler handler;
@@ -37,7 +36,6 @@ public class ProductFragment extends Fragment{
 
         productNameTextView=(TextView)view.findViewById(R.id.product_name);
         productDescriptionTextView=(TextView)view.findViewById(R.id.product_description);
-        productPriceTextView=(TextView)view.findViewById(R.id.product_price);
 
         loadProduct();
 
@@ -69,6 +67,5 @@ public class ProductFragment extends Fragment{
     private void refreshUI(){
         productNameTextView.setText(product.getName());
         productDescriptionTextView.setText(product.getDescription());
-        productPriceTextView.setText(""+product.getPrice());
     }
 }
