@@ -2,6 +2,9 @@ package com.lpa.autoshop;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.RectF;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -15,6 +18,8 @@ import com.lpa.autoshop.entity.ProductRegistry;
 import com.lpa.autoshop.entity.Warehouse;
 import com.lpa.autoshop.entity.WarehouseProductRegistry;
 import com.lpa.autoshop.entity.WarehouseRegistry;
+import com.onbarcode.barcode.EAN13;
+import com.onbarcode.barcode.IBarcode;
 
 import java.util.ArrayList;
 
@@ -54,6 +59,7 @@ public class ProductActivity extends ActionBarActivity {
                     }
                 }
         );
+
     }
 
 

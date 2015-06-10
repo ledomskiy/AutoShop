@@ -30,5 +30,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <TextView
+        android:id="@+id/product_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="90sp"
+        android:gravity="center"/>
+
 
 </LinearLayout>

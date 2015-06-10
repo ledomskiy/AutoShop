@@ -4,27 +4,22 @@ package com.lpa.autoshop.entity;
  * Created by lpa on 28.05.15.
  */
 public class Product {
-    /*<product>
-           <description>Мегакрутой движок для крузака:)</description>
-           <idProduct>1</idProduct>
-           <name>Двигатель для тойоты</name>
-           <price>100000.0</price>
-           <productTypeAlias>Engine</productTypeAlias>
-       </product> */
     private int idProduct;
     private String name;
     private String productTypeAlias;
     private double price;
     private String description;
     private float rating;
+    private String code;
 
-    public Product(int idProduct, String name, String productTypeAlias, double price, String description, float rating) {
+    public Product(int idProduct, String name, String productTypeAlias, double price, String description, float rating, String code) {
         this.idProduct = idProduct;
         this.name = name;
         this.productTypeAlias = productTypeAlias;
         this.price = price;
         this.description = description;
         this.rating = rating;
+        this.code = code;
     }
 
     public int getIdProduct() {
@@ -69,6 +64,10 @@ public class Product {
 
     public float getRating() {
         return rating;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     @Override
