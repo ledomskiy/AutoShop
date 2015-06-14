@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,181 +25,65 @@ import com.lpa.autoshop.entity.Model;
 import com.lpa.autoshop.entity.ModelRegistry;
 import com.lpa.autoshop.entity.ProductType;
 import com.lpa.autoshop.entity.ProductTypeRegistry;
+import com.lpa.autoshop.entity.UserRegistry;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
-
-    private Spinner productTypeSpinner;
-    private ArrayList<ProductType> productTypeArrayList;
-    private ArrayAdapter<ProductType> productTypesArrayAdapter;
-
-    private Spinner brandSpinner;
-    private ArrayList<Brand> brandArrayList;
-    private ArrayAdapter<Brand> brandArrayAdapter;
-
-    private Spinner modelSpinner;
-    private ArrayList<Model> modelArrayList;
-    private ArrayAdapter<Model> modelArrayAdapter;
-
-    private Spinner bodySpinner;
-    private ArrayList<Body> bodyArrayList;
-    private ArrayAdapter<Body> bodyArrayAdapter;
-
-    private ProductType selectedProductType;
-    private Brand selectedBrand;
-    private Model selectedModel;
-    private Body selectedBody;
-
-    private Button findButton;
-
-    Handler handler;
+    private EditText loginEditText;
+    private EditText passwordEditText;
+    private Button login_button;
+    private Button registration_button;
+    private Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        handler = new Handler ();
 
-        /*
-        FragmentManager fm = getFragmentManager();
-        ProductTypeListFragment productTypeListFragment = (ProductTypeListFragment)fm.findFragmentById(R.id.product_type_list_fragment);
-        productTypeArrayList = new ArrayList<>();
-        productTypesArrayAdapter = new ArrayAdapter<ProductType>(this, android.R.layout.simple_list_item_1, productTypeArrayList);
-        productTypeListFragment.setListAdapter(productTypesArrayAdapter);
-        */
+        loginEditText = (EditText)findViewById(R.id.login_edit_text);
+        passwordEditText = (EditText)findViewById(R.id.password_edit_text);
 
-        productTypeSpinner = (Spinner)findViewById(R.id.product_type_spinner);
-        productTypeArrayList = new ArrayList<>();
-        productTypesArrayAdapter = new ArrayAdapter<ProductType>(this, android.R.layout.simple_spinner_item, productTypeArrayList);
-        productTypesArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        productTypeSpinner.setAdapter(productTypesArrayAdapter);
+        login_button = (Button)findViewById(R.id.login_button);
+        registration_button = (Button)findViewById(R.id.registration_button);
 
-        productTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedProductType = ((ArrayAdapter<ProductType>) parent.getAdapter()).getItem(position);
-                refreshBrandList();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        brandSpinner = (Spinner)findViewById(R.id.brand_spinner);
-        brandArrayList = new ArrayList<>();
-        brandArrayAdapter = new ArrayAdapter<Brand>(this, android.R.layout.simple_spinner_item, brandArrayList);
-        brandArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        brandSpinner.setAdapter(brandArrayAdapter);
-
-        brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedBrand = ((ArrayAdapter<Brand>) parent.getAdapter()).getItem(position);
-                refreshModelList();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        modelSpinner = (Spinner)findViewById(R.id.model_spinner);
-        modelArrayList = new ArrayList<>();
-        modelArrayAdapter = new ArrayAdapter<Model>(this, android.R.layout.simple_spinner_item, modelArrayList);
-        modelArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        modelSpinner.setAdapter(modelArrayAdapter);
-
-        modelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedModel = ((ArrayAdapter<Model>) parent.getAdapter()).getItem(position);
-                refreshBodyList();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        bodySpinner = (Spinner)findViewById(R.id.body_spinner);
-        bodyArrayList = new ArrayList<>();
-        bodyArrayAdapter = new ArrayAdapter<Body>(this, android.R.layout.simple_spinner_item, bodyArrayList);
-        bodyArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        bodySpinner.setAdapter(bodyArrayAdapter);
-
-        bodySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedBody = ((ArrayAdapter<Body>) parent.getAdapter()).getItem(position);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        findButton = (Button)findViewById(R.id.find_button);
-        findButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ProductListActivity.class);
-                intent.putExtra(ProductTypeRegistry.PRODUCT_TYPE_ALIAS, selectedProductType.getAlias());
-                startActivity(intent);
-            }
-        });
-
-        handler = new Handler();
-        refreshProductTypeList();
-
-    }
-
-    public void refreshProductTypeList(){
-        Thread thread = new Thread(){
-            @Override
-            public void run(){
-                // TODO Remove
-                BodyProductRegistry.getInstance().refreshBodyProductList();
-                BodyRegistry.getInstance().refreshBodiesList();
-                ModelRegistry.getInstance().refreshModelList();
-                BrandRegistry.getInstance().refreshBrandList();
-
-                //BrandRegistry.getInstance().findProduct(1);
-
-                final ArrayList<ProductType> productTypes = ProductTypeRegistry.getInstance().getProductTypes();
-                handler.post(
-                    new Runnable(){
-                        public void run(){
-                            productTypeArrayList.clear();
-                            for (ProductType productType : productTypes){
-                                productTypeArrayList.add(productType);
-                            }
-                            productTypesArrayAdapter.notifyDataSetChanged();
-                        }
+        login_button.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        checkPassword ();
                     }
-                );
-            }
-        };
-        thread.start();
+                }
+        );
+
+        registration_button.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        createUser ();
+                    }
+                }
+        );
     }
 
-    public void refreshBrandList(){
-        Thread thread = new Thread(){
+
+    public void createUser (){
+        Thread thread = new Thread (){
             @Override
-            public void run(){
-                final ArrayList<Brand> brands = BrandRegistry.getInstance().findByProductType(selectedProductType.getAlias());
+            public void run (){
+                final String login = loginEditText.getText().toString();
+                final String password = passwordEditText.getText().toString();
+                final boolean isCreated = UserRegistry.getInstance().createUser(login, password);
                 handler.post(
-                        new Runnable(){
-                            public void run(){
-                                brandArrayList.clear();
-                                for (Brand brand : brands){
-                                    brandArrayList.add(brand);
+                        new Runnable (){
+                            public void run (){
+                                if (isCreated){
+                                    setUserAndStartFindProduct ();
+                                }else{
+                                    showToast ("User already exists!");
                                 }
-                                brandArrayAdapter.notifyDataSetChanged();
                             }
                         }
                 );
@@ -207,19 +92,21 @@ public class MainActivity extends ActionBarActivity {
         thread.start();
     }
 
-    public void refreshModelList(){
-        Thread thread = new Thread(){
+    public void checkPassword (){
+        Thread thread = new Thread (){
             @Override
-            public void run(){
-                final ArrayList<Model> models = ModelRegistry.getInstance().findByProductType(selectedBrand.getIdBrand(), selectedProductType.getAlias());
+            public void run (){
+                final String login = loginEditText.getText().toString();
+                final String password = passwordEditText.getText().toString();
+                final boolean isPasswordCorrect = UserRegistry.getInstance().isPasswordCorrect(login, password);
                 handler.post(
-                        new Runnable(){
-                            public void run(){
-                                modelArrayList.clear();
-                                for (Model model : models){
-                                    modelArrayList.add(model);
+                        new Runnable (){
+                            public void run (){
+                                if (isPasswordCorrect){
+                                    setUserAndStartFindProduct ();
+                                }else{
+                                    showToast ("Autentifacation failed!");
                                 }
-                                modelArrayAdapter.notifyDataSetChanged();
                             }
                         }
                 );
@@ -228,26 +115,16 @@ public class MainActivity extends ActionBarActivity {
         thread.start();
     }
 
-    public void refreshBodyList(){
-        Thread thread = new Thread(){
-            @Override
-            public void run(){
-                final ArrayList<Body> bodies = BodyRegistry.getInstance().findByProductType(selectedModel.getIdModel(), selectedProductType.getAlias());
-                handler.post(
-                        new Runnable(){
-                            public void run(){
-                                bodyArrayList.clear();
-                                for (Body body : bodies){
-                                    bodyArrayList.add(body);
-                                }
-                                bodyArrayAdapter.notifyDataSetChanged();
-                            }
-                        }
-                );
-            }
-        };
-        thread.start();
+    public void showToast (String text){
+        Toast toast = Toast.makeText (getApplicationContext(), text, Toast.LENGTH_SHORT);
+        toast.show ();
     }
+
+    public void setUserAndStartFindProduct (){
+        Intent intent = new Intent (MainActivity.this, ProductFindActivity.class);
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
